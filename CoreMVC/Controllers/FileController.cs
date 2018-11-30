@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -9,16 +11,20 @@ namespace CoreMVC.Controllers
 {
     public class FileController : Controller
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration configuration;
+        private readonly ILog log = LogManager.GetLogger(Startup.repository.Name, typeof(FileController));
 
-        public FileController(IConfiguration configuration)
+        public FileController(IConfiguration config)
         {
-            _configuration = configuration;
+            configuration = config;
         }
 
         public IActionResult Index()
         {
-            ViewBag.MySqlConn = _configuration.GetValue<string>("Ado.Net.MySqlConn");
+            ViewBag.MySqlConn = configuration.GetValue<string>("Ado.Net.MySqlConn");
+
+            log.Info("信息日志" + Guid.NewGuid().ToString());
+            log.Error("错误日志" + Guid.NewGuid().ToString());
 
             return View();
         }

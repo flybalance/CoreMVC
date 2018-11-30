@@ -1,6 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CoreMVC.Dependency;
+using log4net;
+using log4net.Config;
+using log4net.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,9 +19,20 @@ namespace CoreMVC
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public static ILoggerRepository repository { get; set; }
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+
+            var builder = new ConfigurationBuilder()
+               .SetBasePath(env.ContentRootPath)
+               .AddJsonFile("Config\\appsettings.json", optional: true, reloadOnChange: true)
+               .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+               .AddJsonFile("Config\\host.json",optional:true,reloadOnChange:true)
+               .AddEnvironmentVariables();
+            Configuration = builder.Build();
+            repository = LogManager.CreateRepository("NETCoreRepository");
+            XmlConfigurator.Configure(repository, new FileInfo("Config\\log4net.config"));
         }
 
         private IConfiguration Configuration { get; }
