@@ -26,13 +26,13 @@ namespace CoreMVC
 
             var builder = new ConfigurationBuilder()
                .SetBasePath(env.ContentRootPath)
-               .AddJsonFile("Config\\appsettings.json", optional: true, reloadOnChange: true)
+               .AddJsonFile("Config//appsettings.json", optional: true, reloadOnChange: true)
                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-               .AddJsonFile("Config\\host.json",optional:true,reloadOnChange:true)
+               .AddJsonFile("Config//host.json",optional:true,reloadOnChange:true)
                .AddEnvironmentVariables();
             Configuration = builder.Build();
             repository = LogManager.CreateRepository("NETCoreRepository");
-            XmlConfigurator.Configure(repository, new FileInfo("Config\\log4net.config"));
+            XmlConfigurator.Configure(repository, new FileInfo("Config//log4net.config"));
         }
 
         private IConfiguration Configuration { get; }

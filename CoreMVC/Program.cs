@@ -13,7 +13,7 @@ namespace CoreMVC
         {
             var builder = new ConfigurationBuilder()
              .SetBasePath(Directory.GetCurrentDirectory())
-             .AddJsonFile("Config\\host.json", optional: true, reloadOnChange: true)
+             .AddJsonFile("Config//host.json", optional: true, reloadOnChange: true)
              .AddEnvironmentVariables();
             configuration = builder.Build();
             CreateWebHostBuilder(args).Build().Run();
