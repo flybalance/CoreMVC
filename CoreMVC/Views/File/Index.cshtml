@@ -1,0 +1,38 @@
+﻿@{
+    Layout = null;
+}
+@using CoreMVC.Service;
+@inject IMemberService memberService;
+@inject IEmployeeService employeeService;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <form class="form-horizontal" action="/file/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="importFile" class="form-control" multiple />
+        <br />
+        <button class="btn btn-default">form上传</button>
+        <br />
+        <span style="color:red">@ViewData["MsgBox"]</span>
+        <br />
+        <span style="color:red">MySqlConn:@ViewBag.MySqlConn</span>
+        <br />
+        <span style="">OracleConn:@ViewBag.OracleConn</span>
+        <br />
+        <br />
+        <br />
+        <br />
+        <b>11</b>
+        <b>@memberService.GetMemberInfo(10).Company</b>
+         <br />
+        <br />
+        <br />
+        <br />
+        <b>@employeeService.CountEmployee()</b>
+    </form>
+</body>
+</html>
