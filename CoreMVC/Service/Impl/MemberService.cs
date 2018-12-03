@@ -17,7 +17,7 @@ namespace CoreMVC.Service.Impl
 
         public int CountMember()
         {
-            return int.MaxValue;
+            return int.MinValue;
         }
     }
 }

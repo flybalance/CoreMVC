@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using CoreMVC.Service;
+using log4net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NPOI.SS.UserModel;
@@ -13,15 +14,19 @@ namespace CoreMVC.Controllers
     {
         private readonly IConfiguration configuration;
         private readonly ILog log = LogManager.GetLogger(Startup.repository.Name, typeof(FileController));
+        private readonly IMemberService memberService;
 
-        public FileController(IConfiguration config)
+        public FileController(IConfiguration config, IMemberService memberServiceImpl)
         {
             configuration = config;
+            memberService = memberServiceImpl;
         }
 
         public IActionResult Index()
         {
             ViewBag.MySqlConn = configuration.GetValue<string>("Ado.Net.MySqlConn");
+
+            ViewData["CountMember"] = memberService.CountMember();
 
             log.Info("信息日志" + Guid.NewGuid().ToString());
             log.Error("错误日志" + Guid.NewGuid().ToString());

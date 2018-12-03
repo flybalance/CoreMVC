@@ -28,7 +28,6 @@ namespace CoreMVC
                .SetBasePath(env.ContentRootPath)
                .AddJsonFile("Config//appsettings.json", optional: true, reloadOnChange: true)
                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-               .AddJsonFile("Config//host.json",optional:true,reloadOnChange:true)
                .AddEnvironmentVariables();
             Configuration = builder.Build();
             repository = LogManager.CreateRepository("NETCoreRepository");
