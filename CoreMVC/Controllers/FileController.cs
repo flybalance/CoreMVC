@@ -1,12 +1,21 @@
-﻿using CoreMVC.Service;
+﻿using CoreMVC.Domain.Entity;
+using CoreMVC.Domain.Response;
+using CoreMVC.RemoteService;
+using CoreMVC.Service;
 using log4net;
+using Microsoft.AspNetCore.Identity.UI.Pages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using WebApiClient;
 
 namespace CoreMVC.Controllers
 {
@@ -16,6 +25,8 @@ namespace CoreMVC.Controllers
         private readonly ILog log = LogManager.GetLogger(Startup.repository.Name, typeof(FileController));
         private readonly IMemberService memberService;
 
+        IProvinceApi client = HttpApiClient.Create<IProvinceApi>();
+
         public FileController(IConfiguration config, IMemberService memberServiceImpl)
         {
             configuration = config;
@@ -24,6 +35,44 @@ namespace CoreMVC.Controllers
 
         public IActionResult Index()
         {
+            var client = HttpApiClient.Create<IProvinceApi>();
+            //var jsonResult = await client.FindProvinceById(422L);
+            //ViewBag.JsonResult = jsonResult;
+
+            //Province province = new Province();
+            //province.ProvinceId = 431L;
+            //province.ProvinceName = "广东省";
+            //School school1 = new School { Code = "7932", SchoolName = "南开大学", Years = "1937", StudentNum = 40272 };
+            //School school2 = new School { Code = "7987", SchoolName = "广州大学", Years = "1937", StudentNum = 40272 };
+            //List<School> schools = new List<School>() { school1, school2 };
+            //province.School = schools;
+            //HttpApiFactory.Add<IProvinceApi>().ConfigureHttpApiConfig(c =>
+            //{
+            //    c.LoggerFactory = new LoggerFactory().AddConsole();
+            //});
+
+
+
+            try
+            {
+                ApiResponse<Province> jsonResult = client.FindProvinceById(422L).Retry(3,i=>TimeSpan.FromMinutes(i)).InvokeAsync().Result;
+                ViewBag.JsonResult = jsonResult;
+            }
+            catch (HttpStatusFailureException ex)
+            {
+                var error = ex.ReadAsAsync<ErrorModel>();
+                log.Error(error);
+            }
+            catch (HttpRequestException ex)
+            {
+                log.Error($"HttpRequestException = {ex}");
+            }
+            catch (Exception ex)
+            {
+                log.Error($"Exception = {ex}");
+            }
+
+
             ViewBag.MySqlConn = configuration.GetValue<string>("Ado.Net.MySqlConn");
 
             ViewData["CountMember"] = memberService.CountMember();
